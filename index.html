@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Exposición Fourier: Pulso y Delta - Versión Final</title>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --slide-bg: #121212;
+            --pulso: #00f2ff;
+            --delta: #ff007f;
+            --math: #39ff14;
+            --text: #ffffff;
+            --nota: #b0b0b0;
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; }
+        .slide { 
+            width: 1000px; min-height: 750px; background: var(--slide-bg); 
+            margin: 30px 0; padding: 40px; border-radius: 15px; 
+            border: 1px solid #333; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        /* Estilo de la Portada basado en tu imagen */
+        .portada {
+            text-align: center;
+            justify-content: center;
+            border: 2px solid #444;
+        }
+        .portada h1 { font-size: 4.5rem; margin-bottom: 10px; color: #fff; }
+        .linea-verde { height: 4px; width: 450px; background: #39ff14; margin: 0 auto 40px; }
+        .portada .tema-pulso { color: var(--pulso); font-size: 2.5rem; font-weight: bold; margin: 15px 0; }
+        .portada .tema-delta { color: var(--delta); font-size: 2.5rem; font-weight: bold; margin: 15px 0; }
+        .integrantes { margin-top: 50px; color: #888; font-size: 1.2rem; }
+
+        h2 { font-size: 2.2rem; margin: 0; color: var(--pulso); border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .math-box { 
+            background: #000; padding: 25px; border-radius: 10px; 
+            margin: 20px 0; text-align: center; font-size: 2.4rem; 
+            color: var(--math); border: 1px solid #222; box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.1);
+        }
+        .contexto { 
+            margin-top: auto; padding: 25px; background: #1a1a1a; 
+            border-radius: 10px; border-top: 4px solid var(--math);
+        }
+        .contexto p { margin: 0; font-size: 1.15rem; color: var(--nota); line-height: 1.6; font-style: italic; }
+        b { color: var(--math); }
+    </style>
+</head>
+<body>
+
+    <div class="slide portada">
+        <h1>Transformada de Fourier</h1>
+        <div class="linea-verde"></div>
+        <div class="tema-pulso">3.3.4 FUNCIÓN PULSO</div>
+        <div class="tema-delta">3.3.4 DELTA DE DIRAC</div>
+        
+        <div class="integrantes">
+            <p>Davila Martinez Brayan</p>
+            <br>
+            <p>Martinez Rios Edson Jared</p>
+        </div>
+
+        <div class="contexto">
+            <p>Bienvenidos a nuestra presentación. Hoy analizaremos dos señales que son pilares en la ingeniería: el pulso rectangular, que es la base de la comunicación digital, y la Delta de Dirac, una herramienta matemática abstracta pero vital para entender el muestreo. Pasaremos del dominio del tiempo a la frecuencia para ver cómo se comportan sus espectros.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>Definición del Pulso Rectangular $x(t)$</h2>
+                <ul>
+            <li style="font-size: 1.4rem; margin: 15px 0;">Representa una señal de amplitud <b>1</b> durante un tiempo <b>$\tau$</b>.</li>
+            <li style="font-size: 1.4rem; margin: 15px 0;">Se define matemáticamente mediante la función <b>rect</b>.</li>
+            <li style="font-size: 1.4rem; margin: 15px 0;">Es una señal par, simétrica respecto al eje vertical.</li>
+        </ul>
+        <div class="math-box">
+            $$x(t) = \text{rect}\left(\frac{t}{\tau}\right) = \begin{cases} 1 & |t| \le \frac{\tau}{2} \\ 0 & |t| > \frac{\tau}{2} \end{cases}$$
+        </div>
+        <div class="contexto">
+            <p>Para empezar, debemos visualizar el pulso rectangular como una ventana. Imaginen un interruptor que se enciende exactamente en $-\tau/2$ y se apaga en $\tau/2$. Esta "abrupticidad" en el tiempo es lo que causará un comportamiento muy interesante cuando miremos su contenido de frecuencias; nada que cambie tan rápido en el tiempo puede tener un espectro sencillo.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>Planteamiento de la Integral de Fourier</h2>
+        <p style="font-size: 1.3rem;">Sustituimos nuestra señal en la definición general:</p>
+        <div class="math-box">
+            $$X(\omega) = \int_{-\infty}^{\infty} x(t) e^{-j\omega t} dt = \int_{-\frac{\tau}{2}}^{\frac{\tau}{2}} (1) e^{-j\omega t} dt$$
+        </div>
+        <p style="font-size: 1.3rem;">Calculando la primitiva de la exponencial:</p>
+        <div class="math-box">
+            $$X(\omega) = \left[ \frac{e^{-j\omega t}}{-j\omega} \right]_{-\tau/2}^{\tau/2} = \frac{e^{-j\omega \frac{\tau}{2}} - e^{j\omega \frac{\tau}{2}}}{-j\omega}$$
+        </div>
+        <div class="contexto">
+            <p>Aquí aplicamos el cálculo integral básico. Noten que los límites de integración se acotan al ancho del pulso $\tau$, porque fuera de ahí la señal es cero. Al evaluar los límites superior e inferior, obtenemos una resta de exponenciales complejas. Este es el "esqueleto" matemático que nos permitirá conectar con las funciones trigonométricas en el siguiente paso.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>Llegando a la Función Seno (Euler)</h2>
+        <p style="font-size: 1.3rem;">Reordenamos los términos para eliminar el signo negativo:</p>
+        <div class="math-box">
+            $$X(\omega) = \frac{e^{j\omega \frac{\tau}{2}} - e^{-j\omega \frac{\tau}{2}}}{j\omega}$$
+        </div>
+        <p style="font-size: 1.3rem;">Aplicando la identidad $\sin(\theta) = \frac{e^{j\theta} - e^{-j\theta}}{2j}$:</p>
+        <div class="math-box">
+            $$X(\omega) = \frac{2 \sin\left(\omega \frac{\tau}{2}\right)}{\omega}$$
+        </div>
+        <div class="contexto">
+            <p>Este es el momento clave de la derivación. Gracias a la identidad de Euler, esa resta de exponenciales complejas dividida por $j$ se transforma en una función seno. El número 2 aparece porque multiplicamos y dividimos para completar la identidad. Lo que estamos viendo es que el pulso, algo "cuadrado", genera una respuesta oscilatoria en la frecuencia.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>El Espectro Final: Función Sinc</h2>
+                <div class="math-box">
+            $$X(\omega) = \tau \frac{\sin(\omega \tau / 2)}{\omega \tau / 2} = \tau \text{sinc}\left(\frac{\omega \tau}{2\pi}\right)$$
+        </div>
+        <p style="font-size: 1.3rem;">Propiedades críticas del espectro:</p>
+        <ul style="font-size: 1.2rem;">
+            <li>El valor máximo ocurre en frecuencia cero y vale <b>$\tau$</b>.</li>
+            <li>Los cruces por cero ocurren en múltiplos de <b>$2\pi/\tau$</b>.</li>
+            <li><b>Dualidad:</b> Entre más angosto el pulso, más ancho el espectro.</li>
+        </ul>
+        <div class="contexto">
+            <p>La función Sinc es fascinante porque nos dice que el pulso rectangular tiene componentes de frecuencia que nunca mueren, simplemente se van atenuando. Esto es un problema en ingeniería porque genera interferencia. Si quisiéramos un pulso perfectamente instantáneo en el tiempo, necesitaríamos un ancho de banda infinito, lo cual nos lleva a nuestro siguiente tema.</p>
+        </div>
+    </div>
+
+    <div class="slide" style="border-left: 10px solid var(--delta);">
+        <h2 style="color: var(--delta);">3.3.4 La Delta de Dirac $\delta(t)$</h2>
+                <ul style="font-size: 1.4rem;">
+            <li>Es el límite de un pulso cuando el ancho tiende a <b>cero</b>.</li>
+            <li>Su amplitud tiende al <b>infinito</b>, pero su área es <b>1</b>.</li>
+            <li><b>Propiedad de Selectividad:</b> Extrae el valor de una función en un punto.</li>
+        </ul>
+        <div class="math-box">
+            $$\int_{-\infty}^{\infty} f(t) \delta(t-t_0) dt = f(t_0)$$
+        </div>
+        <div class="contexto">
+            <p>La Delta de Dirac es una idealización matemática. No existe un impulso físico que dure exactamente cero segundos, pero lo usamos para modelar fenómenos como un martillazo o un pulso de muestreo. Su característica más importante no es su altura, sino su capacidad de "filtrar" o "seleccionar" valores de otras funciones dentro de una integral.</p>
+        </div>
+    </div>
+
+    <div class="slide" style="border-left: 10px solid var(--delta);">
+        <h2 style="color: var(--delta);">Transformada del Impulso Unitario</h2>
+        <p style="font-size: 1.3rem;">Aplicamos la definición de Fourier a $\delta(t)$:</p>
+        <div class="math-box">
+            $$X(\omega) = \int_{-\infty}^{\infty} \delta(t) e^{-j\omega t} dt$$
+        </div>
+        <p style="font-size: 1.3rem;">Evaluando la exponencial en el punto de impulso ($t=0$):</p>
+        <div class="math-box">
+            $$X(\omega) = e^{-j\omega(0)} = 1$$
+        </div>
+        <div class="contexto">
+            <p>Este es probablemente el cálculo más simple pero el más poderoso de todo el curso. Debido a que la Delta solo tiene valor en el instante cero, la integral completa colapsa y solo nos interesa cuánto vale la exponencial compleja en ese preciso momento. Como $e$ a la cero es uno, obtenemos una constante. Esto significa que un impulso puntual contiene todas las frecuencias del universo con la misma magnitud.</p>
+        </div>
+    </div>
+
+    <div class="slide" style="border: 2px solid var(--math); text-align: center;">
+        <h2 style="color: var(--math);">Conclusión y Dualidad</h2>
+        
+        <div class="math-box" style="font-size: 3rem;">
+            $$\text{rect}(t/\tau) \iff \tau \text{sinc}(\dots)$$
+            $$\delta(t) \iff 1$$
+        </div>
+        <div class="contexto">
+            <p>Para concluir nuestra exposición, observen la simetría: mientras más "apretamos" una señal en el tiempo, más se "desparrama" en la frecuencia. El pulso rectangular tiene un compromiso entre ambos, pero la Delta de Dirac es el caso extremo: tiempo nulo, frecuencia infinita. Entender estos dos conceptos es fundamental para el diseño de filtros y sistemas de comunicación. ¡Muchas gracias por su atención!</p>
+        </div>
+    </div>
+
+</body>
+</html>
